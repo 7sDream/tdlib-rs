@@ -47,10 +47,12 @@ fn write_function<W: Write>(
             param.description.replace('\n', "\n    /// ")
         )?;
     }
-    writeln!(
-        file,
-        "    /// * `client_id` - The client id to send the request to"
-    )?;
+    if rustifier::definitions::need_client_id(def) {
+        writeln!(
+            file,
+            "    /// * `client_id` - The client id to send the request to"
+        )?;
+    }
 
     // Function
     writeln!(file, "    #[allow(clippy::too_many_arguments)]")?;
@@ -59,9 +61,13 @@ fn write_function<W: Write>(
         "    pub async fn {}(",
         rustifier::definitions::function_name(def)
     )?;
-    for param in def.params.iter() {
+    for (i, param) in def.params.iter().enumerate() {
         if rustifier::parameters::is_for_bots_only(param) && !gen_bots_only_api {
             continue;
+        }
+
+        if i != 0 {
+            write!(file, ", ")?;
         }
 
         write!(file, "{}: ", rustifier::parameters::attr_name(param))?;
@@ -74,13 +80,20 @@ fn write_function<W: Write>(
         if is_optional {
             write!(file, ">")?;
         }
-
-        write!(file, ", ")?;
     }
 
     writeln!(
         file,
-        "client_id: i32) -> Result<{}, crate::types::Error> {{",
+        "{}) -> Result<{}, crate::types::Error> {{",
+        if rustifier::definitions::need_client_id(def) {
+            let mut param = ", client_id: i32";
+            if def.params.is_empty() {
+                param = &param[2..]
+            }
+            param
+        } else {
+            ""
+        },
         rustifier::types::qual_name(&def.ty, false)
     )?;
 
@@ -104,7 +117,12 @@ fn write_function<W: Write>(
     // Send request
     writeln!(
         file,
-        "        let response = send_request(client_id, request).await;"
+        "        let response = send_request({}, request).await;",
+        if rustifier::definitions::need_client_id(def) {
+            "client_id"
+        } else {
+            "0"
+        },
     )?;
     writeln!(file, "        if response[\"@type\"] == \"error\" {{")?;
     writeln!(

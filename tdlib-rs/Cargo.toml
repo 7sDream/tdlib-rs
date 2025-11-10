@@ -54,4 +54,9 @@ reqwest = { version = "0.12.4", features = ["blocking"], optional = true }
 zip = { version = "2.0.0", optional = true }
 
 [dev-dependencies]
-tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time"] }
+tokio = { version = "1", features = [
+    "macros",
+    "rt-multi-thread",
+    "sync",
+    "time",
+] }

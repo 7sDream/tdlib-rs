@@ -154,6 +154,13 @@ pub mod definitions {
     pub fn is_for_bots_only(def: &Definition) -> bool {
         def.description.contains("; for bots only")
     }
+
+    pub fn need_client_id(def: &Definition) -> bool {
+        // functions that can be called synchronously is can be execute by
+        // td_execute, which do not needs a client_id in parameter,
+        // so we can use this to check if a function needs client_id.
+        !def.description.contains("Can be called synchronously")
+    }
 }
 
 pub mod types {
