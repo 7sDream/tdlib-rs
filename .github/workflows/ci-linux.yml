@@ -41,6 +41,7 @@ jobs:
         uses: robinraju/release-downloader@v1.12
         with:
             repository: "FedericoBruzzone/tdlib-rs"
+            latest: true
             fileName: ${{ runner.arch == 'ARM64' && 'tdlib-*-linux-aarch64.zip' || 'tdlib-*-linux-x86_64.zip' }}
             extract: true
       - name: Set pkg-config environment variables

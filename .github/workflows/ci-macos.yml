@@ -34,9 +34,12 @@ jobs:
         uses: actions/checkout@v4
       - name: Download TDLib
         if:  matrix.feature == 'local-tdlib' || matrix.feature == 'pkg-config'
-        run: |
-          gh release download --pattern ${{ runner.arch == 'ARM64' && 'tdlib-*-macos-aarch64.zip' || 'tdlib-*-macos-x86_64.zip' }}
-          unzip -q *.zip -d .
+        uses: robinraju/release-downloader@v1.12
+        with:
+            repository: "FedericoBruzzone/tdlib-rs"
+            latest: true
+            fileName: ${{ runner.arch == 'ARM64' && 'tdlib-*-macos-aarch64.zip' || 'tdlib-*-macos-x86_64.zip' }}
+            extract: true
       - name: Set pkg-config environment variables
         if: matrix.feature == 'pkg-config'
         run: |
