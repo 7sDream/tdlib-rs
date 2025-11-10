@@ -1,4 +1,5 @@
 /get_me_db
 /target
 /.vscode
+/.cargo
 Cargo.lock
