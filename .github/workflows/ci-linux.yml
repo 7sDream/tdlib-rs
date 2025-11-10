@@ -33,14 +33,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install needed packages
-        run: | 
+        run: |
           sudo apt update
           sudo apt install libc++-dev libc++abi-dev
       - name: Download TDLib
         if:  matrix.feature == 'local-tdlib' || matrix.feature == 'pkg-config'
-        run: |
-          gh release download --pattern ${{ runner.arch == 'ARM64' && 'tdlib-*-linux-aarch64.zip' || 'tdlib-*-linux-x86_64.zip' }}
-          unzip -q *.zip -d .
+        uses: robinraju/release-downloader@v1.12
+        with:
+            repository: "FedericoBruzzone/tdlib-rs"
+            fileName: ${{ runner.arch == 'ARM64' && 'tdlib-*-linux-aarch64.zip' || 'tdlib-*-linux-x86_64.zip' }}
+            extract: true
       - name: Set pkg-config environment variables
         if: matrix.feature == 'pkg-config'
         run: |
