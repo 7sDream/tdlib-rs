@@ -118,10 +118,10 @@ jobs:
           git checkout 07b30b49e5136a36100a2ce644476e60d7f3ddc1
           ./bootstrap-vcpkg.bat
           if [[ "$RUNNER_ARCH" == "X64" ]]; then
-            ./vcpkg.exe install gperf:x64-windows openssl:x64-windows-static zlib:x64-windows-static
+            ./vcpkg.exe install gperf:x64-windows openssl:x64-windows zlib:x64-windows-static
             CMAKE_ARCH="x64"
           elif [[ "$RUNNER_ARCH" == "ARM64" ]]; then
-            ./vcpkg.exe install gperf:arm64-windows openssl:arm64-windows-static zlib:arm64-windows-static
+            ./vcpkg.exe install gperf:arm64-windows openssl:arm64-windows zlib:arm64-windows-static
             CMAKE_ARCH="ARM64"
           else
             echo "Unsupported architecture: $RUNNER_ARCH"
@@ -131,7 +131,7 @@ jobs:
           rm -rf build
           mkdir build
           cd build
-          cmake -A "$CMAKE_ARCH" -DCMAKE_INSTALL_PREFIX:PATH=../tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows-static ..
+          cmake -A "$CMAKE_ARCH" -DCMAKE_INSTALL_PREFIX:PATH=../tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake ..
           cmake --build . --target install --config Release
         shell: bash
       - name: Save cache TDLib
