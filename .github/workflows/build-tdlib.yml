@@ -120,11 +120,11 @@ jobs:
           if [[ "$RUNNER_ARCH" == "X64" ]]; then
             ./vcpkg.exe install gperf:x64-windows-static openssl:x64-windows-static zlib:x64-windows-static
             CMAKE_ARCH="x64"
-            VCPKG_TRIPLET="x64-windows-static"
+            VCPKG_TRIPLET="x64-windows-static-md"
           elif [[ "$RUNNER_ARCH" == "ARM64" ]]; then
             ./vcpkg.exe install gperf:arm64-windows-static openssl:arm64-windows-static zlib:arm64-windows-static
             CMAKE_ARCH="ARM64"
-            VCPKG_TRIPLET="arm64-windows-static"
+            VCPKG_TRIPLET="arm64-windows-static-md"
           else
             echo "Unsupported architecture: $RUNNER_ARCH"
             exit 1
